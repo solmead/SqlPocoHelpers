@@ -200,23 +200,24 @@ namespace SqlPocoHelpers
 
 
 
-        [Obsolete("Use version with parameter list", true)]
         public static IQueryable<TTt> SqlQueryExtended<TTt>(this DbContext db, string sql,
             params SqlParameter[] parameters) where TTt : class
         {
             return db.Database.SqlQueryExtended<TTt>(sql, (from p in parameters select p as Object).ToList());
         }
+        public static IQueryable<TTt> SqlQueryExtended<TTt>(this Database db, string sql, params object[] parameters) where TTt : class
+        {
+            var map = new Dictionary<string, string>();
+            return db.SqlQueryExtended<TTt>(sql, (from p in parameters select p).ToList(), map);
+        }
+
+
+
         [Obsolete("Use version with parameter list then mappings. (sql, parameter, mappings)", true)]
         public static IQueryable<TTt> SqlQueryExtended<TTt>(this DbContext db, Dictionary<string, string> mappings, string sql,
             params SqlParameter[] parameters) where TTt : class
         {
             return db.Database.SqlQueryExtended<TTt>(sql, parameters, mappings);
-        }
-        [Obsolete("Use version with parameter list", true)]
-        public static IQueryable<TTt> SqlQueryExtended<TTt>(this Database db, string sql, params object[] parameters) where TTt : class
-        {
-            var map = new Dictionary<string, string>();
-            return db.SqlQueryExtended<TTt>(sql, (from p in parameters select p).ToList(), map);
         }
         [Obsolete("Use version with parameter list then mappings. (sql, parameter, mappings)", true)]
         public static IQueryable<TTt> SqlQueryExtended<TTt>(this Database db, Dictionary<string, string> mappings,

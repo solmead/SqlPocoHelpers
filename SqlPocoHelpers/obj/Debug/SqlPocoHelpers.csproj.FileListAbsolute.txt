@@ -33,3 +33,15 @@ F:\Libraries\SqlPocoHelpers\SqlPocoHelpers\bin\Debug\EntityFramework.SqlServer.x
 F:\Libraries\SqlPocoHelpers\SqlPocoHelpers\bin\Debug\PocoPropertyData.xml
 F:\Libraries\SqlPocoHelpers\SqlPocoHelpers\obj\Debug\SqlPocoHelpers.dll
 F:\Libraries\SqlPocoHelpers\SqlPocoHelpers\obj\Debug\SqlPocoHelpers.pdb
+F:\UC Projects\eRPT\libs\SqlPocoHelpers\SqlPocoHelpers\bin\Debug\SqlPocoHelpers.dll.config
+F:\UC Projects\eRPT\libs\SqlPocoHelpers\SqlPocoHelpers\bin\Debug\SqlPocoHelpers.dll
+F:\UC Projects\eRPT\libs\SqlPocoHelpers\SqlPocoHelpers\bin\Debug\SqlPocoHelpers.pdb
+F:\UC Projects\eRPT\libs\SqlPocoHelpers\SqlPocoHelpers\bin\Debug\EntityFramework.dll
+F:\UC Projects\eRPT\libs\SqlPocoHelpers\SqlPocoHelpers\bin\Debug\EntityFramework.SqlServer.dll
+F:\UC Projects\eRPT\libs\SqlPocoHelpers\SqlPocoHelpers\bin\Debug\PocoPropertyData.dll
+F:\UC Projects\eRPT\libs\SqlPocoHelpers\SqlPocoHelpers\bin\Debug\EntityFramework.xml
+F:\UC Projects\eRPT\libs\SqlPocoHelpers\SqlPocoHelpers\bin\Debug\EntityFramework.SqlServer.xml
+F:\UC Projects\eRPT\libs\SqlPocoHelpers\SqlPocoHelpers\bin\Debug\PocoPropertyData.xml
+F:\UC Projects\eRPT\libs\SqlPocoHelpers\SqlPocoHelpers\obj\Debug\SqlPocoHelpers.csprojResolveAssemblyReference.cache
+F:\UC Projects\eRPT\libs\SqlPocoHelpers\SqlPocoHelpers\obj\Debug\SqlPocoHelpers.dll
+F:\UC Projects\eRPT\libs\SqlPocoHelpers\SqlPocoHelpers\obj\Debug\SqlPocoHelpers.pdb
