@@ -17,7 +17,121 @@ namespace SqlPocoHelpers
             return new SqlParameter(name, (value ?? DBNull.Value));
         }
 
-        public static DataSet SqlQueryDataSet(this  Database db, string sql, List<Object> parameters)
+
+        public static bool DoesFieldExist(SqlConnection conn, string tableName, string fieldName)
+        {
+            string SQL = "SELECT top 1 [" + fieldName + "] FROM [" + tableName + "]";
+            try
+            {
+                var i = conn.SqlQueryScaler(SQL, null);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+
+
+        public static object SqlQueryScaler(this Database db, string sql, List<Object> parameters)
+        {
+            db.Log(sql);
+            if (parameters == null)
+            {
+                parameters = new List<object>();
+            }
+            foreach (var param in parameters)
+            {
+                var p = param as ObjectParameter;
+                if (p != null)
+                {
+                    db.Log("-- " + p.Name + ": '" + p.Value + "'");
+                }
+                var p2 = param as DbParameter;
+                if (p2 != null)
+                {
+                    db.Log("-- " + p2.ParameterName + ": '" + p2.Value + "'");
+                }
+            }
+            var st = DateTime.Now;
+            db.Log("-- Executing at " + DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToShortTimeString());
+            var ret = SqlQueryScaler((SqlConnection)db.Connection, sql, parameters);
+            db.Log("-- Loaded in " + DateTime.Now.Subtract(st).TotalMilliseconds + " ms");
+            return ret;
+        }
+
+        public static Object SqlQueryScaler(this SqlConnection db, string sql, List<Object> parameters)
+        {
+            try
+            {
+
+                if (parameters == null)
+                {
+                    parameters = new List<object>();
+                }
+                var conn = db;
+                {
+                    var cmd = new SqlCommand(sql, conn);
+                    cmd.CommandTimeout = (db.ConnectionTimeout != 0 ? db.ConnectionTimeout : 20);
+
+                    foreach (var param in parameters)
+                    {
+                        cmd.Parameters.Add(param);
+                    }
+                    return cmd.ExecuteScalar();
+                }
+            }
+            catch (Exception ex)
+            {
+                var tstr = sql + "";
+                foreach (var param in parameters)
+                {
+
+                    var p = param as ObjectParameter;
+                    if (p != null)
+                    {
+                        tstr = tstr + " " + p.Name + " = " + (p.Value == null ? "null" : "'" + p.Value + "'");
+                    }
+                    var p2 = param as DbParameter;
+                    if (p2 != null)
+                    {
+                        tstr = tstr + " " + p2.ParameterName + " = " + (p2.Value == null ? "null" : "'" + p2.Value + "'");
+                    }
+                }
+                throw new Exception("Error: " + ex.Message + " on db call:" + tstr, ex);
+            }
+        }
+
+        public static DataSet SqlQueryDataSet(this Database db, string sql, List<Object> parameters)
+        {
+            db.Log(sql);
+
+            if (parameters == null)
+            {
+                parameters = new List<object>();
+            }
+            foreach (var param in parameters)
+            {
+                var p = param as ObjectParameter;
+                if (p != null)
+                {
+                    db.Log("-- " + p.Name + ": '" + p.Value + "'");
+                }
+                var p2 = param as DbParameter;
+                if (p2 != null)
+                {
+                    db.Log("-- " + p2.ParameterName + ": '" + p2.Value + "'");
+                }
+            }
+            var st = DateTime.Now;
+            db.Log("-- Executing at " + DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToShortTimeString());
+            var ret = SqlQueryDataSet((SqlConnection) db.Connection, sql, parameters);
+            db.Log("-- Loaded in " + DateTime.Now.Subtract(st).TotalMilliseconds + " ms");
+            return ret;
+        }
+
+        public static DataSet SqlQueryDataSet(this SqlConnection db, string sql, List<Object> parameters)
         {
             try
             {
@@ -27,34 +141,20 @@ namespace SqlPocoHelpers
                 parameters = new List<object>();
             }
             var ds = new DataSet();
-            var conn = (SqlConnection)db.Connection;
+            var conn = db;
             {
-                db.Log(sql);
                 var cmd = new SqlCommand(sql, conn);
-                cmd.CommandTimeout = (db.CommandTimeout.HasValue ? db.CommandTimeout.Value : 20);
+                cmd.CommandTimeout = (db.ConnectionTimeout!=0 ? db.ConnectionTimeout : 20);
 
                 foreach (var param in parameters)
                 {
                     cmd.Parameters.Add(param);
-                    var p = param as ObjectParameter;
-                    if (p != null)
-                    {
-                        db.Log("-- " + p.Name + ": '" + p.Value + "'");
-                    }
-                    var p2 = param as DbParameter;
-                    if (p2 != null)
-                    {
-                        db.Log("-- " + p2.ParameterName + ": '" + p2.Value + "'");
-                    }
                 }
 
                 var da = new SqlDataAdapter(cmd);
 
 
-                var st = DateTime.Now;
-                db.Log("-- Executing at " + DateTime.Now.ToShortDateString() + " " + DateTime.Now.ToShortTimeString());
                 da.Fill(ds);
-                db.Log("-- Loaded in " + DateTime.Now.Subtract(st).TotalMilliseconds + " ms");
             }
             return ds;
             }
@@ -79,6 +179,10 @@ namespace SqlPocoHelpers
             }
         }
 
+        public static DataTable SqlQueryTable(this SqlConnection db, string sql, List<Object> parameters)
+        {
+            return db.SqlQueryDataSet(sql, parameters).Tables[0];
+        }
 
         public static DataTable SqlQueryTable(this Database db, string sql, List<Object> parameters)
         {
@@ -86,6 +190,11 @@ namespace SqlPocoHelpers
         }
 
 
+        public static void ExecuteSqlCommandExtended(this SqlConnection db, string sql,
+            params SqlParameter[] parameters)
+        {
+            db.ExecuteSqlCommandExtended(sql, (from p in parameters select p as Object).ToList());
+        }
 
         public static void ExecuteSqlCommandExtended(this Database db, string sql,
             params SqlParameter[] parameters)
@@ -99,8 +208,13 @@ namespace SqlPocoHelpers
              db.Database.ExecuteSqlCommandExtended(sql, (from p in parameters select p as Object).ToList());
         }
 
+        public static void ExecuteSqlCommandExtended(this SqlConnection db, string sql,
+            List<Object> parameters = null)
+        {
+            db.SqlQueryDataSet(sql, parameters);
+        }
         public static void ExecuteSqlCommandExtended(this DbContext db, string sql,
-            List<SqlParameter> parameters = null)
+            List<Object> parameters = null)
         {
 
              db.Database.ExecuteSqlCommandExtended(sql, (from p in parameters select p as Object).ToList());
@@ -111,6 +225,19 @@ namespace SqlPocoHelpers
             var st = DateTime.Now;
             db.SqlQueryDataSet(sql, parameters);
             db.Log("-- Completed in " + DateTime.Now.Subtract(st).TotalMilliseconds + " ms");
+        }
+        public static IQueryable<TTt> SqlQueryExtended<TTt>(this SqlConnection db, string sql,
+            List<SqlParameter> parameters = null, Dictionary<string, string> mappings = null) where TTt : class
+        {
+            if (mappings == null)
+            {
+                mappings = new Dictionary<string, string>();
+            }
+            var st = DateTime.Now;
+            var tbl = db.SqlQueryTable(sql, (from p in parameters select (object)p).ToList());
+            var st2 = DateTime.Now;
+            var q = tbl.ToList<TTt>(columnMapping: mappings).AsQueryable();
+            return q;
         }
         public static IQueryable<TTt> SqlQueryExtended<TTt>(this DbContext db, string sql,
             List<SqlParameter> parameters = null, Dictionary<string, string> mappings = null) where TTt : class
@@ -198,6 +325,11 @@ namespace SqlPocoHelpers
         }
 
 
+        public static IQueryable<TTt> SqlQueryExtended<TTt>(this SqlConnection db, string sql, params object[] parameters) where TTt : class
+        {
+            var map = new Dictionary<string, string>();
+            return db.SqlQueryExtended<TTt>(sql, (from p in parameters select p).ToList(), map);
+        }
 
 
         public static IQueryable<TTt> SqlQueryExtended<TTt>(this DbContext db, string sql,
