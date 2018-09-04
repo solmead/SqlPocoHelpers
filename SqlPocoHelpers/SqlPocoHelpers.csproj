@@ -33,13 +33,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
     </Reference>
     <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
-      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
     </Reference>
-    <Reference Include="PocoPropertyData, Version=1.1.6466.32616, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\PocoPropertyData.1.1.6466.32616\lib\net45\PocoPropertyData.dll</HintPath>
+    <Reference Include="LinqDynamic, Version=1.9.5205.35168, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\LinqDynamic.1.9.5205.35168\lib\net35\LinqDynamic.dll</HintPath>
+    </Reference>
+    <Reference Include="PocoPropertyData, Version=1.1.6817.30285, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\PocoPropertyData.1.1.6817.30285\lib\net45\PocoPropertyData.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
@@ -49,11 +52,12 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
-    <Reference Include="Utilities.CollectionExtensions, Version=1.1.6465.28980, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Utilities.CollectionExtensions.1.1.6465.28980\lib\net45\Utilities.CollectionExtensions.dll</HintPath>
+    <Reference Include="Utilities.CollectionExtensions, Version=1.1.6577.21972, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Utilities.CollectionExtensions.1.1.6577.21972\lib\net45\Utilities.CollectionExtensions.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Odbc.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sql.cs" />
   </ItemGroup>
